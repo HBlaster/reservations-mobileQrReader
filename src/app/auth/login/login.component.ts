@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -8,8 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent  implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
+  login() {
+    // Simulate a login action
+    const token = 'efwefwef'; // This should be replaced with actual token from login service
+    localStorage.setItem('loginToken', token);
+    // Redirect to home page after login
+    this.router.navigate(['/home']);
+  }
 
 }
