@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {AuthService} from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -13,23 +14,35 @@ export class LoginComponent  implements OnInit {
   form: FormGroup;
 
   constructor(private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private authService: AuthService
   ) { 
     // Initialize the form with validation
     this.form = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(4)]]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(0)]],
     });
   }
 
   ngOnInit() {
   }
   login() {
-    // Simulate a login action
-    const token = 'efwefwef'; // This should be replaced with actual token from login service
-    localStorage.setItem('loginToken', token);
-    // Redirect to home page after login
-    this.router.navigate(['/home']);
+    if (this.form.valid) {
+
+      this.authService.login(this.form.value).subscribe({
+        next: (response: any) => {
+          const token = response.access_token;
+          localStorage.setItem('loginToken', token);
+          // Redirect to home page after login
+          this.router.navigate(['/home']);
+        },
+        error: (error) => {
+          console.error('Login failed', error);
+          // Handle login error
+          alert('Login failed. Please check your credentials.');
+        }
+      });
+    }
   }
 
 }
