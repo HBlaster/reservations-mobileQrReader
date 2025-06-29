@@ -25,3 +25,13 @@
 #container a {
   text-decoration: none;
 }
+
+.container, .scanner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 20px;
+}
+
