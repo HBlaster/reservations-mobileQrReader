@@ -25,38 +25,45 @@ export class HomePage {
   }
 
   async handleScan(result: string) {
-  console.log('🔍 Escaneando código QR:', result);
-  this.showScanner = false;
-  this.scannedResult = result;
+    console.log('🔍 Escaneando código QR:', result);
+    this.showScanner = false;
+    this.scannedResult = result;
 
-  try {
-    const response: any = await this.reservationService.validateQR(this.scannedResult).toPromise();
-    console.log('✅ Respuesta de validación:', response);
+    try {
+      const response: any = await this.reservationService
+        .validateQR(this.scannedResult)
+        .toPromise();
+      console.log('✅ Respuesta de validación:', response);
 
-    if (response.status === 'success') {
-      await this.showAlert('Validación Exitosa', 'El código QR es válido.');
-    } else if (response.status === 'checked_in') {
-      await this.showAlert('Código Ya Utilizado', 'Este QR ya fue registrado anteriormente.');
-    } else {
-      await this.showAlert('Error', 'Respuesta inesperada del servidor.');
+      if (response.status === 'success') {
+        await this.showAlert('Validación Exitosa', 'El código QR es válido.');
+      } else if (response.status === 'checked_in') {
+        await this.showAlert(
+          'Código Ya Utilizado',
+          'Este QR ya fue registrado anteriormente.'
+        );
+      } else {
+        await this.showAlert('Error', 'Respuesta inesperada del servidor.');
+      }
+    } catch (error) {
+      console.error('❌ Error en validación:', error);
+      await this.showAlert(
+        'Error',
+        'Ocurrió un error al validar el QR. Inténtelo de nuevo.'
+      );
+    } finally {
+      this.scannedResult = null;
     }
-  } catch (error) {
-    console.error('❌ Error en validación:', error);
-    await this.showAlert('Error', 'Ocurrió un error al validar el QR. Inténtelo de nuevo.');
-  } finally {
-    this.scannedResult = null;
   }
-}
 
-private async showAlert(header: string, message: string) {
-  const alert = await this.alertController.create({
-    header,
-    message,
-    buttons: ['OK'],
-  });
-  await alert.present();
-}
-
+  private async showAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ['OK'],
+    });
+    await alert.present();
+  }
 
   abrirScanner() {
     this.showScanner = true;
