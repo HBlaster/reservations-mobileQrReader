@@ -1,25 +1,32 @@
 <ion-header translucent="true">
   <ion-toolbar>
-    <ion-title>usuario</ion-title>
+    <ion-title>Usuario</ion-title>
     <ion-buttons slot="end">
-      <ion-button color="danger" (click)="logout()">Logout</ion-button>
+      <ion-button color="danger" (click)="logout()">
+        Logout
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen="true">
   <div class="container" *ngIf="!showScanner">
-    <ion-button expand="block" (click)="abrirScanner()">
+    <ion-button expand="block" size="large" (click)="abrirScanner()">
+      <ion-icon slot="start" name="qr-code-outline"></ion-icon>
       Escanear QR
     </ion-button>
   </div>
 
-  <div class="scanner-container" *ngIf="showScanner">
-    <ion-button fill="clear" color="medium" size="small" (click)="cerrarScanner()" style="float: right;">
-      cerrar escáner
-    </ion-button>
+  <div class="scanner-overlay" *ngIf="showScanner">
+    <div class="scanner-header">
+      <p>Alinea el QR dentro del recuadro</p>
+      <ion-button fill="clear" color="light" (click)="cerrarScanner()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </div>
 
     <zxing-scanner
+      class="scanner"
       [torch]="false"
       [tryHarder]="true"
       (scanSuccess)="handleScan($event)">
