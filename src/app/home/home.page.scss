@@ -1,39 +1,3 @@
-// #container {
-//   text-align: center;
-
-//   position: absolute;
-//   left: 0;
-//   right: 0;
-//   top: 50%;
-//   transform: translateY(-50%);
-// }
-
-// #container strong {
-//   font-size: 20px;
-//   line-height: 26px;
-// }
-
-// #container p {
-//   font-size: 16px;
-//   line-height: 22px;
-
-//   color: #8c8c8c;
-
-//   margin: 0;
-// }
-
-// #container a {
-//   text-decoration: none;
-// }
-
-// .container, .scanner-container {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   justify-content: center;
-//   height: 100%;
-//   gap: 20px;
-// }
 
 .container {
   display: flex;
@@ -48,7 +12,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.85);
+  background: rgba(199, 199, 199, 0.85);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
