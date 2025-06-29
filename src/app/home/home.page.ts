@@ -24,45 +24,40 @@ export class HomePage {
     this.router.navigate(['/auth/login']);
   }
 
-  handleScan(result: string) {
-    this.scannedResult = result;
-    this.showScanner = false;
-    console.log('Resultado del escaneo:', result);
+  async handleScan(result: string) {
+  console.log('🔍 Escaneando código QR:', result);
+  this.showScanner = false;
+  this.scannedResult = result;
 
-    this.reservationService.validateQR(result).subscribe({
-      next: (response: any) => {
-        if (response.status === 'success') {
-          this.alertController
-            .create({
-              header: 'Validación Exitosa',
-              message: 'El código QR es válido.',
-              buttons: ['OK'],
-            })
-            .then((alert) => alert.present());
-        } else if (response.status === 'checked_in') {
-          this.alertController
-            .create({
-              header: 'Error',
-              message: 'El código QR ya ha sido utilizado.',
-              buttons: ['OK'],
-            })
-            .then((alert) => alert.present());
-        }
-        console.log('response:', response);
-      },
-      error: (err) => {
-        console.error('Error en validación:', err);
-        this.alertController
-          .create({
-            header: 'Error',
-            message:
-              'Ocurrió un error al validar el código QR. Por favor, inténtelo de nuevo.',
-            buttons: ['OK'],
-          })
-          .then((alert) => alert.present());
-      },
-    });
+  try {
+    const response: any = await this.reservationService.validateQR(this.scannedResult).toPromise();
+    console.log('✅ Respuesta de validación:', response);
+
+    if (response.status === 'success') {
+      await this.showAlert('Validación Exitosa', 'El código QR es válido.');
+    } else if (response.status === 'checked_in') {
+      await this.showAlert('Código Ya Utilizado', 'Este QR ya fue registrado anteriormente.');
+    } else {
+      await this.showAlert('Error', 'Respuesta inesperada del servidor.');
+    }
+  } catch (error) {
+    console.error('❌ Error en validación:', error);
+    await this.showAlert('Error', 'Ocurrió un error al validar el QR. Inténtelo de nuevo.');
+  } finally {
+    this.scannedResult = null;
   }
+}
+
+private async showAlert(header: string, message: string) {
+  const alert = await this.alertController.create({
+    header,
+    message,
+    buttons: ['OK'],
+  });
+  await alert.present();
+}
+
+
   abrirScanner() {
     this.showScanner = true;
   }
